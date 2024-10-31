@@ -1,7 +1,7 @@
 "use client";
-import Footer from "src/components/Footer";
-import Header from "src/components/Header";
-import EligibilityModal from "src/components/EligibilityModal";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import EligibilityModal from "@/components/EligibilityModal";
 import AuthBoundary from "@/components/AuthBoundary";
 
 export default function Home() {

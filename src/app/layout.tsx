@@ -6,7 +6,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import dynamic from "next/dynamic";
 
 const OnchainProviders = dynamic(
-  () => import("src/components/OnchainProviders"),
+  () => import("@/components/OnchainProviders"),
   {
     ssr: false,
   }
