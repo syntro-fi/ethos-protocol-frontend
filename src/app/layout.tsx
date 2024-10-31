@@ -24,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex items-center justify-center">
+      <body className="mx-8">
         <OnchainProviders>
           {children}
           <Toaster />
