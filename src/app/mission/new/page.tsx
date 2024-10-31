@@ -12,7 +12,7 @@ export default function NewMission() {
   };
 
   return (
-    <div className="flex h-full w-96 max-w-full flex-col px-1 md:w-[1008px]">
+    <div className="flex h-full mx-auto w-96 max-w-full flex-col px-1 md:w-[1008px]">
       <Header />
       <section className="w-full py-4 md:grow">
         <AuthBoundary>
