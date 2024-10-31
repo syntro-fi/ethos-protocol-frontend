@@ -27,7 +27,7 @@ import EligibilityModal from "@/components/EligibilityModal";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  description: z.string(),
   deadline: z.date().min(new Date(), "Deadline must be in the future"),
 });
 
