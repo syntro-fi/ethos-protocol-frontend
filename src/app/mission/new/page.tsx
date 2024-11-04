@@ -1,14 +1,118 @@
-"use client";
+'use client';
 
-import AuthBoundary from "@/components/AuthBoundary";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import MissionForm from "@/components/mission/MissionForm";
+import AuthBoundary from '@/components/AuthBoundary';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import MissionForm from '@/components/mission/MissionForm';
+import type { SCHEMA } from '@/components/mission/MissionForm';
+import { useState } from 'react';
+import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
+import { http, createConfig } from 'wagmi';
+import { anvil } from 'wagmi/chains';
+import type { z } from 'zod';
+
+import { MISSION_FACTORY_ADDRESS } from '@/constants';
+import missionFactoryAbiJson from '@/contracts/abis/MissionFactory.sol/MissionFactory.json';
+
+const config = createConfig({
+  chains: [anvil],
+  transports: {
+    [anvil.id]: http(),
+  },
+});
+
+function useContractTransaction() {
+  const { data: walletClient } = useWalletClient();
+  const publicClient = usePublicClient();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const executeTransaction = async (missionConfig: any) => {
+    if (!walletClient) {
+      throw new Error('Wallet client not connected');
+    }
+
+    if (!publicClient) {
+      throw new Error('Public client not initialized');
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    const [address] = await walletClient.getAddresses();
+    const request = {
+      address: MISSION_FACTORY_ADDRESS as `0x${string}`,
+      abi: missionFactoryAbiJson.abi,
+      functionName: 'createMission',
+      args: [
+        {
+          sponsor: missionConfig.sponsor,
+          startDate: missionConfig.startDate,
+          endDate: missionConfig.endDate,
+          distributionStrategy: missionConfig.distributionStrategy,
+          addtlDataCid: missionConfig.addtlDataCid,
+        },
+        '0x0000000000000000000000000000000000000001',
+        '0x0000000000000000000000000000000000000002',
+      ],
+      account: address,
+    };
+
+    try {
+      const sim = await publicClient.simulateContract(request);
+
+      console.log('Simulation successful, sending transaction...', sim);
+
+      const hash = await walletClient.writeContract(request);
+
+      // Wait for transaction
+      const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+      // If simulation succeeds, send the actual transaction
+      console.log('Transaction hash:', hash);
+
+      // Wait for transaction receipt
+      console.log('Transaction receipt:', receipt);
+
+      return hash;
+    } catch (err: any) {
+      setError(err);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { executeTransaction, isLoading, error };
+}
 
 export default function NewMission() {
-  const handleSubmit = async (data: any) => {
-    // TODO: Implement your submission logic here
-    console.log(data);
+  const { address } = useAccount();
+  const { executeTransaction, isLoading, error } = useContractTransaction();
+
+  const handleSubmit = async (formData: z.infer<typeof SCHEMA>) => {
+    if (!address) {
+      throw new Error('Please connect your wallet');
+    }
+
+    const descriptionCid = 'QmQ4321';
+
+    const missionConfig = {
+      sponsor: address,
+      startDate: BigInt(Math.floor(Date.now() / 1000)),
+      endDate: BigInt(Math.floor(formData.deadline.getTime() / 1000)),
+      distributionStrategy: 0n,
+      addtlDataCid: descriptionCid,
+    };
+    console.log('missionConfig', missionConfig);
+
+    try {
+      const hash = await executeTransaction(missionConfig);
+      // Handle success (e.g., show success message, reset form)
+      console.log('success', hash);
+    } catch (err) {
+      console.error('error', err);
+    }
   };
 
   return (
@@ -19,6 +123,7 @@ export default function NewMission() {
           <div className="w-full">
             <h1 className="text-2xl font-bold mb-6">Create New Mission</h1>
             <MissionForm onSubmit={handleSubmit} />
+            {isLoading ? 'Confirming...' : ''}
           </div>
         </AuthBoundary>
       </section>
