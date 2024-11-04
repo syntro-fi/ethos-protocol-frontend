@@ -123,7 +123,7 @@ export default function EligibilityModal() {
     };
 
     fetchModules();
-  }, []);
+  }, [allModules.length]);
 
   const handleSubmit = () => {
     // Add any submission logic here

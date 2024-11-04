@@ -7,27 +7,25 @@ import MissionForm from '@/components/mission/MissionForm';
 import type { SCHEMA } from '@/components/mission/MissionForm';
 import { useState } from 'react';
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
-import { http, createConfig } from 'wagmi';
-import { anvil } from 'wagmi/chains';
 import type { z } from 'zod';
 
 import { MISSION_FACTORY_ADDRESS } from '@/constants';
 import missionFactoryAbiJson from '@/contracts/abis/MissionFactory.sol/MissionFactory.json';
 
-const config = createConfig({
-  chains: [anvil],
-  transports: {
-    [anvil.id]: http(),
-  },
-});
+interface MissionConfig {
+  sponsor: string;
+  startDate: bigint;
+  endDate: bigint;
+  distributionStrategy: bigint;
+  addtlDataCid: string;
+}
 
 function useContractTransaction() {
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const executeTransaction = async (missionConfig: any) => {
+  const executeTransaction = async (missionConfig: MissionConfig) => {
     if (!walletClient) {
       throw new Error('Wallet client not connected');
     }
@@ -37,7 +35,6 @@ function useContractTransaction() {
     }
 
     setIsLoading(true);
-    setError(null);
 
     const [address] = await walletClient.getAddresses();
     const request = {
@@ -75,20 +72,17 @@ function useContractTransaction() {
       console.log('Transaction receipt:', receipt);
 
       return hash;
-    } catch (err: any) {
-      setError(err);
-      throw err;
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { executeTransaction, isLoading, error };
+  return { executeTransaction, isLoading };
 }
 
 export default function NewMission() {
   const { address } = useAccount();
-  const { executeTransaction, isLoading, error } = useContractTransaction();
+  const { executeTransaction, isLoading } = useContractTransaction();
 
   const handleSubmit = async (formData: z.infer<typeof SCHEMA>) => {
     if (!address) {
