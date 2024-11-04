@@ -1,7 +1,7 @@
-"use client";
-import { useAccount } from "wagmi";
-import LoginButton from "./LoginButton";
-import SignupButton from "./SignupButton";
+'use client';
+import { useAccount } from 'wagmi';
+import LoginButton from './LoginButton';
+import SignupButton from './SignupButton';
 
 export default function Header() {
   const { address } = useAccount();

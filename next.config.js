@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["ipfs.io", "github.com"],
+    domains: ['ipfs.io', 'github.com'],
   },
   reactStrictMode: true,
   webpack: (config) => {
-    config.externals.push("pino-pretty", "lokijs", "encoding");
+    config.externals.push('pino-pretty', 'lokijs', 'encoding');
     return config;
   },
 };

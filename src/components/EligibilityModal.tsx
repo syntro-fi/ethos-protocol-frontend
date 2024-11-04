@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { X } from "lucide-react";
+import { X } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 type EthosModule = {
   id: string;
   name: string;
   address: string;
   categoryName: string;
-  categoryId: BigInt;
+  categoryId: bigint;
 };
 
 const ModuleSelector = ({
@@ -38,10 +38,7 @@ const ModuleSelector = ({
     if (allModules.length === 0) return;
 
     setAvailableModules(
-      allModules.filter(
-        (module) =>
-          !selectedModules.some((selected) => selected.id === module.id)
-      )
+      allModules.filter((module) => !selectedModules.some((selected) => selected.id === module.id)),
     );
   }, [allModules, selectedModules]);
 
@@ -77,16 +74,9 @@ const ModuleSelector = ({
           <h3 className="mb-2 font-semibold">Selected Modules</h3>
           <ScrollArea className="h-[200px] w-full rounded-md border p-4">
             {selectedModules.map((module) => (
-              <div
-                key={module.id}
-                className="flex items-center justify-between py-2"
-              >
+              <div key={module.id} className="flex items-center justify-between py-2">
                 <span className="text-sm">{module.name}</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeModule(module)}
-                >
+                <Button variant="ghost" size="sm" onClick={() => removeModule(module)}>
                   <X className="h-4 w-4" />
                 </Button>
               </div>
@@ -100,11 +90,9 @@ const ModuleSelector = ({
 
 export default function EligibilityModal() {
   const [allModules, setAllModules] = useState<EthosModule[]>([]);
-  const [contributorModules, setContributorModules] = useState<EthosModule[]>(
-    []
-  );
+  const [contributorModules, setContributorModules] = useState<EthosModule[]>([]);
   const [verifierModules, setVerifierModules] = useState<EthosModule[]>([]);
-  const [activeTab, setActiveTab] = useState("contributor");
+  const [activeTab, setActiveTab] = useState('contributor');
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -112,9 +100,9 @@ export default function EligibilityModal() {
       if (allModules.length > 0) return;
 
       try {
-        const response = await fetch("http://localhost:8080/v1/graphql", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const response = await fetch('http://localhost:8080/v1/graphql', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             query: `
               query {
@@ -130,7 +118,7 @@ export default function EligibilityModal() {
         const data = await response.json();
         setAllModules(data.data.EthosModule);
       } catch (error) {
-        console.error("Error fetching modules:", error);
+        console.error('Error fetching modules:', error);
       }
     };
 
@@ -144,7 +132,7 @@ export default function EligibilityModal() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild={true}>
         <Button variant="outline" onClick={() => setOpen(true)}>
           Select Modules
         </Button>

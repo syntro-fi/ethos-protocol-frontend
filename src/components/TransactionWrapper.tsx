@@ -6,16 +6,9 @@ import {
   TransactionStatusAction,
   TransactionStatusLabel,
 } from '@coinbase/onchainkit/transaction';
-import type {
-  TransactionError,
-  TransactionResponse,
-} from '@coinbase/onchainkit/transaction';
+import type { TransactionError, TransactionResponse } from '@coinbase/onchainkit/transaction';
 import type { Address, ContractFunctionParameters } from 'viem';
-import {
-  BASE_SEPOLIA_CHAIN_ID,
-  mintABI,
-  mintContractAddress,
-} from '../constants';
+import { BASE_SEPOLIA_CHAIN_ID, mintABI, mintContractAddress } from '../constants';
 
 export default function TransactionWrapper({ address }: { address: Address }) {
   const contracts = [

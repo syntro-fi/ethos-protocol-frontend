@@ -27,9 +27,7 @@ const queryClient = new QueryClient();
 const renderWithProviders = (component: JSX.Element) => {
   return render(
     <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        {component}
-      </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
     </WagmiProvider>,
   );
 };

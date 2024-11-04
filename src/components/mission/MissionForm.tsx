@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import EligibilityModal from '@/components/EligibilityModal';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
@@ -10,30 +10,26 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/utils";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import EligibilityModal from "@/components/EligibilityModal";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
+export const SCHEMA = z.object({
+  title: z.string().min(1, 'Title is required'),
   description: z.string(),
-  deadline: z.date().min(new Date(), "Deadline must be in the future"),
+  deadline: z.date().min(new Date(), 'Deadline must be in the future'),
 });
 
 type MissionFormProps = {
-  initialData?: z.infer<typeof formSchema>;
-  onSubmit: (data: z.infer<typeof formSchema>) => void;
+  initialData?: z.infer<typeof SCHEMA>;
+  onSubmit: (data: z.infer<typeof SCHEMA>) => void;
   isLoading?: boolean;
 };
 
@@ -42,11 +38,11 @@ export default function MissionForm({
   onSubmit,
   isLoading = false,
 }: MissionFormProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof SCHEMA>>({
+    resolver: zodResolver(SCHEMA),
     defaultValues: initialData || {
-      title: "",
-      description: "",
+      title: '',
+      description: '',
       deadline: new Date(),
     },
   });
@@ -103,20 +99,16 @@ export default function MissionForm({
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <Popover>
-                    <PopoverTrigger asChild>
+                    <PopoverTrigger asChild={true}>
                       <FormControl>
                         <Button
                           variant="outline"
                           className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
+                            'w-full pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground',
                           )}
                         >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
+                          {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -126,10 +118,8 @@ export default function MissionForm({
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date < new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
+                        disabled={(date) => date < new Date() || date < new Date('1900-01-01')}
+                        initialFocus={true}
                       />
                     </PopoverContent>
                   </Popover>
@@ -146,7 +136,7 @@ export default function MissionForm({
 
         <div className="flex justify-start">
           <Button type="submit" size="sm" disabled={isLoading}>
-            {isLoading ? "Submitting..." : "Create Mission"}
+            {isLoading ? 'Submitting...' : 'Create Mission'}
           </Button>
         </div>
       </form>

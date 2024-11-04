@@ -1,19 +1,16 @@
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from '@/components/ui/toaster';
 
-import "./global.css";
-import "@coinbase/onchainkit/styles.css";
-import "@rainbow-me/rainbowkit/styles.css";
-import dynamic from "next/dynamic";
+import './global.css';
+import '@coinbase/onchainkit/styles.css';
+import '@rainbow-me/rainbowkit/styles.css';
+import dynamic from 'next/dynamic';
 
-const OnchainProviders = dynamic(
-  () => import("@/components/OnchainProviders"),
-  {
-    ssr: false,
-  }
-);
+const OnchainProviders = dynamic(() => import('@/components/OnchainProviders'), {
+  ssr: false,
+});
 
 export const viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1.0,
 };
 

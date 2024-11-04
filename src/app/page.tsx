@@ -1,7 +1,7 @@
-"use client";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import AuthBoundary from "@/components/AuthBoundary";
+'use client';
+import AuthBoundary from '@/components/AuthBoundary';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 
 export default function Home() {
   return (

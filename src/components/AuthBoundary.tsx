@@ -1,15 +1,12 @@
-import { useAccount } from "wagmi";
-import { ReactNode } from "react";
+import type { ReactNode } from 'react';
+import { useAccount } from 'wagmi';
 
 type AuthBoundaryProps = {
   children: ReactNode;
   fallback?: ReactNode;
 };
 
-export default function AuthBoundary({
-  children,
-  fallback,
-}: AuthBoundaryProps) {
+export default function AuthBoundary({ children, fallback }: AuthBoundaryProps) {
   const { address } = useAccount();
 
   if (!address) {
